@@ -1,0 +1,242 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --primaryColor: #6366f1;
+    --primaryHover: #4f46e5;
+    --surfaceColor: #ffffff;
+    --backgroundColor: #f8fafc;
+    --textMain: #0f172a;
+    --textMuted: #64748b;
+    --borderColor: #e2e8f0;
+    --successColor: #10b981;
+    --dangerColor: #ef4444;
+    --cardShadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Outfit', sans-serif;
+    background-color: var(--backgroundColor);
+    color: var(--textMain);
+    display: flex;
+    min-height: 100vh;
+}
+
+/* --- SIDEBAR NAV --- */
+nav {
+    width: 280px;
+    background: var(--surfaceColor);
+    padding: 2rem 1.5rem;
+    border-right: 1px solid var(--borderColor);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.02);
+}
+
+nav h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primaryColor);
+    margin-bottom: 2rem;
+    text-align: center;
+    letter-spacing: -0.5px;
+}
+
+button.navBtn {
+    background: transparent;
+    border: none;
+    text-align: left;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--textMuted);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+button.navBtn:hover {
+    background: var(--backgroundColor);
+    color: var(--primaryColor);
+    transform: translateX(4px);
+}
+
+button.navBtn.active {
+    background: var(--primaryColor);
+    color: white;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+/* --- MAIN CONTENT --- */
+main {
+    flex: 1;
+    padding: 3rem 4rem;
+    overflow-y: auto;
+}
+
+.section {
+    animation: fadeIn 0.4s ease-out;
+    max-width: 800px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+h3 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    color: var(--textMain);
+}
+
+/* --- DIV INPUTS --- */
+.formContainer {
+    background: var(--surfaceColor);
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: var(--cardShadow);
+    border: 1px solid var(--borderColor);
+}
+
+p {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+label {
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: var(--textMain);
+}
+
+input, select {
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--borderColor);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    background: var(--backgroundColor);
+}
+
+input:focus, select:focus {
+    border-color: var(--primaryColor);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    background: var(--surfaceColor);
+}
+
+button {
+    font-family: inherit;
+}
+
+.btn {
+    background: var(--primaryColor);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.btn:hover {
+    background: var(--primaryHover);
+    transform: translateY(-1px);
+}
+
+.btnDanger {
+    background: var(--dangerColor);
+    width: auto;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+.btnDanger:hover {
+    background: #dc2626;
+}
+
+/* --- DASHBOARD GRID --- */
+h4 {
+    font-size: 1.2rem;
+    color: var(--textMuted);
+    margin: 2.5rem 0 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--borderColor);
+}
+
+h4:first-child {
+    margin-top: 0;
+}
+
+.gridContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.cardItem {
+    background: var(--surfaceColor);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--borderColor);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    transition: transform 0.2s ease;
+}
+
+.cardItem:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--cardShadow);
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.cardHeader h4 {
+    margin: 0;
+    border: none;
+    color: var(--textMain);
+    font-weight: 600;
+}
+
+.cardItem p {
+    margin-bottom: 0.4rem;
+    font-size: 0.95rem;
+    color: var(--textMuted);
+}
+
+.badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.badgeSuccess { background: #d1fae5; color: #065f46; }
+.badgeDanger { background: #fee2e2; color: #991b1b; }
+.textMuted { color: var(--textMuted); font-style: italic; }
+
+.reservaItem {
+    border-left: 4px solid var(--primaryColor);
+}

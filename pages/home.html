@@ -3,16 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Reservas - Hotel</title>
+    <title>Paradiso Hotel - Sistema OOP</title>
+    <link rel="stylesheet" href="../styles/styles.css">
 </head>
 <body>
 
     <nav>
-        <h2>Sistema de Hotel (POO)</h2>
-        <button class="navBtn" onclick="location.href='registrarHabitacion.html'">Habitaciones</button>
-        <button class="navBtn" onclick="location.href='registrarCliente.html'">Clientes</button>
-        <button class="navBtn" onclick="location.href='crearReserva.html'">Reservas</button>
-        <button class="navBtn" onclick="location.href='verListas.html'">Ver Registros (Dashboard)</button>
+        <h2>Hotel Paradiso</h2>
+        <button id="btnNavHabitaciones" class="navBtn active">🏨 Habitaciones</button>
+        <button id="btnNavClientes" class="navBtn">🧑 Clientes</button>
+        <button id="btnNavReservas" class="navBtn">📅 Reservas</button>
+        <button id="btnNavDashboard" class="navBtn">📊 Dashboard</button>
     </nav>
+
+    <main>
+        <!-- SECCIÓN 1: HABITACIONES -->
+        <section id="secHabitaciones" class="section">
+            <div class="formContainer">
+                <h3>Registrar Habitación</h3>
+                <p>
+                    <label>Número de habitación</label>
+                    <input type="text" id="habitacionNumero" placeholder="Ej: 101">
+                </p>
+                <p>
+                    <label>Tipo</label>
+                    <select id="habitacionTipo">
+                        <option value="Sencilla">Sencilla</option>
+                        <option value="Doble">Doble</option>
+                        <option value="Suite">Suite</option>
+                    </select>
+                </p>
+                <p>
+                    <label>Precio por noche ($)</label>
+                    <input type="number" id="habitacionPrecio" min="1" placeholder="Ej: 50">
+                </p>
+                <button id="btnGuardarHabitacion" class="btn">Guardar Habitación</button>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: CLIENTES -->
+        <section id="secClientes" class="section" hidden>
+            <div class="formContainer">
+                <h3>Registrar Cliente</h3>
+                <p>
+                    <label>Nombre Completo</label>
+                    <input type="text" id="clienteNombre" placeholder="Juan Pérez">
+                </p>
+                <p>
+                    <label>Identificación (DNI/Pasaporte)</label>
+                    <input type="text" id="clienteId" placeholder="12345678X">
+                </p>
+                <p>
+                    <label>Contacto (Email/Teléfono)</label>
+                    <input type="text" id="clienteContacto" placeholder="juan@email.com">
+                </p>
+                <button id="btnGuardarCliente" class="btn">Guardar Cliente</button>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 3: RESERVAS -->
+        <section id="secReservas" class="section" hidden>
+            <div class="formContainer">
+                <h3>Crear Reserva</h3>
+                <p>
+                    <label>Identificación del Cliente</label>
+                    <input type="text" id="reservaClienteId" placeholder="12345678X">
+                </p>
+                <p>
+                    <label>Número de Habitación</label>
+                    <input type="text" id="reservaHabNumero" placeholder="Ej: 101">
+                </p>
+                <p>
+                    <label>Fecha de Llegada</label>
+                    <input type="date" id="reservaInicio">
+                </p>
+                <p>
+                    <label>Fecha de Salida</label>
+                    <input type="date" id="reservaFin">
+                </p>
+                <button id="btnConfirmarReserva" class="btn">Confirmar Reserva</button>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 4: DASHBOARD -->
+        <section id="secDashboard" class="section" hidden>
+            <h3>Dashboard Global</h3>
+            
+            <h4>Habitaciones</h4>
+            <div id="listaHabitaciones" class="gridContainer">
+                <p class="textMuted">No hay habitaciones registradas.</p>
+            </div>
+
+            <h4>Clientes</h4>
+            <div id="listaClientes" class="gridContainer">
+                <p class="textMuted">No hay clientes registrados.</p>
+            </div>
+
+            <h4>Reservas Activas</h4>
+            <div id="listaReservas" class="gridContainer">
+                <p class="textMuted">No hay reservas registradas.</p>
+            </div>
+        </section>
+    </main>
+
+    <script type="module" src="../js/home.js"></script>
 </body>
 </html>
