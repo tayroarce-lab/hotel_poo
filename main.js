@@ -2,32 +2,111 @@
 //  main.js — Sistema de Reservas de Hotel
 //  Sin onclick en HTML — todo con addEventListener
 //  Iconos: Lucide Icons (lucide.createIcons())
+//  Persistencia: localStorage
 // ============================================================
 
 // ── Instancia principal del hotel ───────────────────────────
-const hotel = new Hotel("Grand Antigravity Hotel", "Av. Principal 123");
-
-// ── Datos precargados para demostración ─────────────────────
-const habitacionesIniciales = [
-    new Habitacion(101, "Simple",   150),
-    new Habitacion(102, "Doble",    250),
-    new Habitacion(103, "Suite",    500),
-    new Habitacion(104, "Simple",   150),
-    new Habitacion(201, "Doble",    250),
-    new Habitacion(202, "Suite",    500),
-];
-
-const clientesIniciales = [
-    new Cliente("Ana López",      "C001", "ana@email.com"),
-    new Cliente("Carlos Ramos",   "C002", "carlos@email.com"),
-    new Cliente("Sofía Martínez", "C003", "sofia@email.com"),
-];
-
-habitacionesIniciales.forEach(h => hotel.agregarHabitacion(h));
-clientesIniciales.forEach(c => hotel.agregarCliente(c));
+const hotel = new Hotel("Grand POO Hotel", "Av. Principal 123");
 
 // ── Contador de IDs de reserva ───────────────────────────────
 let contadorReserva = 1;
+
+// ============================================================
+//  PERSISTENCIA — localStorage
+// ============================================================
+
+/**
+ * Guarda el estado completo del hotel en localStorage.
+ * Serializa habitaciones, clientes y reservas como JSON.
+ */
+function guardarEnLocalStorage() {
+    const datos = {
+        habitaciones: hotel.habitaciones.map(habitacion => ({
+            numero:  habitacion.numero,
+            tipo:    habitacion.tipo,
+            precio:  habitacion.precio,
+            estado:  habitacion.estado
+        })),
+        clientes: hotel.clientes.map(cliente => ({
+            nombre:         cliente.nombre,
+            identificacion: cliente.identificacion,
+            contacto:       cliente.contacto
+        })),
+        reservas: hotel.reservas.map(reserva => ({
+            id:              reserva.id,
+            clienteId:       reserva.cliente.identificacion,
+            habitacionNumero: reserva.habitacion.numero,
+            fechaInicio:     reserva.fechaInicio,
+            fechaFin:        reserva.fechaFin,
+            estado:          reserva.estado
+        })),
+        contadorReserva: contadorReserva
+    };
+    localStorage.setItem("hotelDatos", JSON.stringify(datos));
+}
+
+/**
+ * Carga los datos desde localStorage y reconstruye los objetos
+ * como instancias reales de las clases (con sus métodos).
+ * Retorna true si se cargaron datos, false si no había nada guardado.
+ */
+function cargarDesdeLocalStorage() {
+    const datosGuardados = localStorage.getItem("hotelDatos");
+    if (!datosGuardados) return false;
+
+    const datos = JSON.parse(datosGuardados);
+
+    // Reconstruir habitaciones como instancias de Habitacion
+    datos.habitaciones.forEach(datosHabitacion => {
+        const habitacion = new Habitacion(datosHabitacion.numero, datosHabitacion.tipo, datosHabitacion.precio);
+        habitacion.estado = datosHabitacion.estado;
+        hotel.agregarHabitacion(habitacion);
+    });
+
+    // Reconstruir clientes como instancias de Cliente
+    datos.clientes.forEach(datosCliente => {
+        const cliente = new Cliente(datosCliente.nombre, datosCliente.identificacion, datosCliente.contacto);
+        hotel.agregarCliente(cliente);
+    });
+
+    // Reconstruir reservas reconectando las referencias a cliente y habitación
+    datos.reservas.forEach(datosReserva => {
+        const cliente    = hotel.clientes.find(cadaCliente => cadaCliente.identificacion === datosReserva.clienteId);
+        const habitacion = hotel.habitaciones.find(cadaHabitacion => String(cadaHabitacion.numero) === String(datosReserva.habitacionNumero));
+        const reserva    = new Reserva(cliente, habitacion, datosReserva.fechaInicio, datosReserva.fechaFin);
+        reserva.id       = datosReserva.id;
+        reserva.estado   = datosReserva.estado;
+        hotel.agregarReserva(reserva);
+    });
+
+    contadorReserva = datos.contadorReserva || 1;
+    return true;
+}
+
+// ── Cargar datos o usar datos de demostración ────────────────
+const datosCargados = cargarDesdeLocalStorage();
+
+if (!datosCargados) {
+    // Primera vez: cargar datos de demostración
+    const habitacionesIniciales = [
+        new Habitacion(101, "Simple",   150),
+        new Habitacion(102, "Doble",    250),
+        new Habitacion(103, "Suite",    500),
+        new Habitacion(104, "Simple",   150),
+        new Habitacion(201, "Doble",    250),
+        new Habitacion(202, "Suite",    500),
+    ];
+
+    const clientesIniciales = [
+        new Cliente("Ana López",      "C001", "ana@email.com"),
+        new Cliente("Carlos Ramos",   "C002", "carlos@email.com"),
+        new Cliente("Sofía Martínez", "C003", "sofia@email.com"),
+    ];
+
+    habitacionesIniciales.forEach(habitacion => hotel.agregarHabitacion(habitacion));
+    clientesIniciales.forEach(cliente => hotel.agregarCliente(cliente));
+    guardarEnLocalStorage();
+}
 
 // ============================================================
 //  FUNCIONES DE NEGOCIO
@@ -36,14 +115,14 @@ let contadorReserva = 1;
 function registrarHabitacion() {
     const numero = document.getElementById("inputNumeroHabitacion").value.trim();
     const tipo   = document.getElementById("inputTipoHabitacion").value;
-    const precio = parseFloat(document.getElementById("inputPrecioHabitacion").value);
+    const precio = parseFloat(document.getElementById("inputPrecioHabitacion").value); //El .parseFloat() convierte el valor del input a número
 
     if (!numero || !tipo || isNaN(precio) || precio <= 0) {
         mostrarNotificacion("Completa todos los campos correctamente.", "error");
         return;
     }
 
-    const yaExiste = hotel.habitaciones.some(h => String(h.numero) === numero);
+    const yaExiste = hotel.habitaciones.some(habitacion => String(habitacion.numero) === numero); //El .some() devuelve true si encuentra al menos un elemento que cumpla la condición
     if (yaExiste) {
         mostrarNotificacion(`La habitación ${numero} ya está registrada.`, "error");
         return;
@@ -58,6 +137,7 @@ function registrarHabitacion() {
 
     actualizarTablaHabitaciones();
     actualizarSelectsReserva();
+    guardarEnLocalStorage();
     mostrarNotificacion(`Habitación ${numero} registrada correctamente.`, "exito");
 }
 
@@ -71,7 +151,7 @@ function registrarCliente() {
         return;
     }
 
-    const yaExiste = hotel.clientes.some(c => c.identificacion === identificacion);
+    const yaExiste = hotel.clientes.some(cliente => cliente.identificacion === identificacion);
     if (yaExiste) {
         mostrarNotificacion(`Ya existe un cliente con ID ${identificacion}.`, "error");
         return;
@@ -86,6 +166,7 @@ function registrarCliente() {
 
     actualizarTablaClientes();
     actualizarSelectsReserva();
+    guardarEnLocalStorage();
     mostrarNotificacion(`Cliente ${nombre} registrado correctamente.`, "exito");
 }
 
@@ -105,8 +186,8 @@ function crearReserva() {
         return;
     }
 
-    const cliente    = hotel.clientes.find(c => c.identificacion === idCliente);
-    const habitacion = hotel.habitaciones.find(h => String(h.numero) === numHabitacion);
+    const cliente    = hotel.clientes.find(cadaCliente => cadaCliente.identificacion === idCliente);
+    const habitacion = hotel.habitaciones.find(cadaHabitacion => String(cadaHabitacion.numero) === numHabitacion);
 
     if (habitacion.estado !== "disponible") {
         mostrarNotificacion(`La habitación ${habitacion.numero} ya está ocupada.`, "error");
@@ -124,11 +205,12 @@ function crearReserva() {
     actualizarTablaHabitaciones();
     actualizarTablaReservas();
     actualizarSelectsReserva();
+    guardarEnLocalStorage();
     mostrarNotificacion(`Reserva creada: ${cliente.nombre} → Hab. ${habitacion.numero}`, "exito");
 }
 
 function cancelarReserva(idReserva) {
-    const reserva = hotel.reservas.find(r => r.id === idReserva);
+    const reserva = hotel.reservas.find(cadaReserva => cadaReserva.id === idReserva);
 
     if (!reserva || reserva.estado === "cancelada") {
         mostrarNotificacion("Esta reserva ya estaba cancelada.", "error");
@@ -140,6 +222,7 @@ function cancelarReserva(idReserva) {
     actualizarTablaHabitaciones();
     actualizarTablaReservas();
     actualizarSelectsReserva();
+    guardarEnLocalStorage();
     mostrarNotificacion(`Reserva #${idReserva} cancelada. Hab. ${reserva.habitacion.numero} disponible.`, "exito");
 }
 
@@ -151,21 +234,21 @@ function actualizarTablaHabitaciones() {
     const tbody = document.getElementById("tablaHabitacionesBody");
     if (!tbody) return;
 
-    tbody.innerHTML = hotel.habitaciones.map(h => `
+    tbody.innerHTML = hotel.habitaciones.map(habitacion => `
         <tr>
-            <td>${h.numero}</td>
-            <td>${h.tipo}</td>
-            <td>$${h.precio.toLocaleString()}</td>
+            <td>${habitacion.numero}</td>
+            <td>${habitacion.tipo}</td>
+            <td>$${habitacion.precio.toLocaleString()}</td>
             <td>
-                <span class="badge ${h.estado === 'disponible' ? 'badgeDisponible' : 'badgeOcupada'}">
-                    ${h.estado === 'disponible'
+                <span class="badge ${habitacion.estado === 'disponible' ? 'badgeDisponible' : 'badgeOcupada'}">
+                    ${habitacion.estado === 'disponible'
                         ? '<i data-lucide="circle-check"></i>'
                         : '<i data-lucide="circle-x"></i>'}
-                    ${h.estado}
+                    ${habitacion.estado}
                 </span>
             </td>
         </tr>
-    `).join("");
+    `).join(""); //El .join("") une todos los elementos del array en un solo string
 
     actualizarStats();
     lucide.createIcons();
@@ -175,12 +258,12 @@ function actualizarTablaClientes() {
     const tbody = document.getElementById("tablaClientesBody");
     if (!tbody) return;
 
-    tbody.innerHTML = hotel.clientes.map(c => `
+    tbody.innerHTML = hotel.clientes.map(cliente => `
         <tr>
-            <td>${c.nombre}</td>
-            <td>${c.identificacion}</td>
-            <td>${c.contacto}</td>
-            <td>${hotel.reservas.filter(r => r.cliente.identificacion === c.identificacion && r.estado === "activa").length} activa(s)</td>
+            <td>${cliente.nombre}</td>
+            <td>${cliente.identificacion}</td>
+            <td>${cliente.contacto}</td>
+            <td>${hotel.reservas.filter(reserva => reserva.cliente.identificacion === cliente.identificacion && reserva.estado === "activa").length} activa(s)</td>
         </tr>
     `).join("");
 
@@ -198,22 +281,22 @@ function actualizarTablaReservas() {
         return;
     }
 
-    tbody.innerHTML = hotel.reservas.map(r => `
-        <tr class="${r.estado === 'cancelada' ? 'filaCancelada' : ''}">
-            <td>#${r.id}</td>
-            <td>${r.cliente.nombre}</td>
-            <td>Hab. ${r.habitacion.numero} (${r.habitacion.tipo})</td>
-            <td>${r.fechaInicio}</td>
-            <td>${r.fechaFin}</td>
+    tbody.innerHTML = hotel.reservas.map(reserva => `
+        <tr class="${reserva.estado === 'cancelada' ? 'filaCancelada' : ''}">
+            <td>#${reserva.id}</td>
+            <td>${reserva.cliente.nombre}</td>
+            <td>Hab. ${reserva.habitacion.numero} (${reserva.habitacion.tipo})</td>
+            <td>${reserva.fechaInicio}</td>
+            <td>${reserva.fechaFin}</td>
             <td class="celdaAcciones">
-                <span class="badge ${r.estado === 'activa' ? 'badgeActiva' : 'badgeCancelada'}">
-                    ${r.estado === 'activa'
+                <span class="badge ${reserva.estado === 'activa' ? 'badgeActiva' : 'badgeCancelada'}">
+                    ${reserva.estado === 'activa'
                         ? '<i data-lucide="circle-check"></i>'
                         : '<i data-lucide="circle-x"></i>'}
-                    ${r.estado}
+                    ${reserva.estado}
                 </span>
-                ${r.estado === 'activa'
-                    ? `<button class="btnCancelar" data-idReserva="${r.id}"><i data-lucide="x"></i> Cancelar</button>`
+                ${reserva.estado === 'activa'
+                    ? `<button class="btnCancelar" data-idreserva="${reserva.id}"><i data-lucide="x"></i> Cancelar</button>`
                     : ""}
             </td>
         </tr>
@@ -230,16 +313,16 @@ function actualizarSelectsReserva() {
 
     selectCliente.innerHTML =
         `<option value="">-- Selecciona un cliente --</option>` +
-        hotel.clientes.map(c =>
-            `<option value="${c.identificacion}">${c.nombre} (${c.identificacion})</option>`
+        hotel.clientes.map(cliente =>
+            `<option value="${cliente.identificacion}">${cliente.nombre} (${cliente.identificacion})</option>`
         ).join("");
 
     selectHabitacion.innerHTML =
         `<option value="">-- Selecciona una habitación --</option>` +
         hotel.habitaciones
-            .filter(h => h.estado === "disponible")
-            .map(h =>
-                `<option value="${h.numero}">Hab. ${h.numero} — ${h.tipo} — $${h.precio}</option>`
+            .filter(habitacion => habitacion.estado === "disponible")
+            .map(habitacion =>
+                `<option value="${habitacion.numero}">Hab. ${habitacion.numero} — ${habitacion.tipo} — $${habitacion.precio}</option>`
             ).join("");
 }
 
@@ -250,9 +333,9 @@ function actualizarStats() {
     const reservasActivas   = document.getElementById("statReservasActivas");
 
     if (totalHabitaciones) totalHabitaciones.textContent = hotel.habitaciones.length;
-    if (disponibles)       disponibles.textContent = hotel.habitaciones.filter(h => h.estado === "disponible").length;
+    if (disponibles)       disponibles.textContent = hotel.habitaciones.filter(habitacion => habitacion.estado === "disponible").length;
     if (clientes)          clientes.textContent = hotel.clientes.length;
-    if (reservasActivas)   reservasActivas.textContent = hotel.reservas.filter(r => r.estado === "activa").length;
+    if (reservasActivas)   reservasActivas.textContent = hotel.reservas.filter(reserva => reserva.estado === "activa").length;
 }
 
 // ============================================================
@@ -280,11 +363,11 @@ function mostrarNotificacion(mensaje, tipo = "exito") {
 // ============================================================
 
 function cambiarPestana(idPestana) {
-    document.querySelectorAll(".tabContent").forEach(el => el.classList.remove("tabContentActivo"));
-    document.querySelectorAll(".tabBtn").forEach(el => el.classList.remove("tabBtnActivo"));
+    document.querySelectorAll(".tabContent").forEach(elemento => elemento.classList.remove("tabContentActivo"));
+    document.querySelectorAll(".tabBtn").forEach(elemento => elemento.classList.remove("tabBtnActivo"));
 
     document.getElementById(idPestana).classList.add("tabContentActivo");
-    document.querySelector(`[data-tabId="${idPestana}"]`).classList.add("tabBtnActivo");
+    document.querySelector(`[data-tabid="${idPestana}"]`).classList.add("tabBtnActivo");
 }
 
 // ============================================================
@@ -313,9 +396,9 @@ document.addEventListener("DOMContentLoaded", () => {
         .addEventListener("click", crearReserva);
 
     // ── Navegación por pestañas ──────────────────────────────
-    document.querySelectorAll(".tabBtn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            cambiarPestana(btn.dataset.tabId);
+    document.querySelectorAll(".tabBtn").forEach(botonTab => {
+        botonTab.addEventListener("click", () => {
+            cambiarPestana(botonTab.dataset.tabid);
         });
     });
 
@@ -326,7 +409,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const btnCancelar = event.target.closest(".btnCancelar");
             if (!btnCancelar) return;
 
-            const idReserva = parseInt(btnCancelar.dataset.idReserva, 10);
+            const idReserva = parseInt(btnCancelar.dataset.idreserva, 10);
             cancelarReserva(idReserva);
         });
 });
