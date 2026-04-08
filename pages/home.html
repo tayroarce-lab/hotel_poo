@@ -3,109 +3,229 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paradiso Hotel - Sistema OOP</title>
-    <link rel="stylesheet" href="../styles/styles.css">
+    <meta name="description" content="Sistema de gestión de reservas de hotel usando POO en JavaScript">
+    <title>Sistema de Reservas — Grand Antigravity Hotel</title>
+    <link rel="stylesheet" href="../styles/style.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 </head>
 <body>
 
-    <nav>
-        <h2>Hotel Paradiso</h2>
-        <button id="btnNavHabitaciones" class="navBtn active">🏨 Habitaciones</button>
-        <button id="btnNavClientes" class="navBtn">🧑 Clientes</button>
-        <button id="btnNavReservas" class="navBtn">📅 Reservas</button>
-        <button id="btnNavDashboard" class="navBtn">📊 Dashboard</button>
-    </nav>
+    <!-- ══ HEADER ══════════════════════════════════════════════ -->
+    <header class="header">
+        <i data-lucide="building-2" class="headerLogo"></i>
+        <h1 class="headerTitulo">Grand Antigravity Hotel</h1>
+        <span class="headerSubtitulo">Sistema de Reservas · POO JavaScript</span>
+    </header>
 
-    <main>
-        <!-- SECCIÓN 1: HABITACIONES -->
-        <section id="secHabitaciones" class="section">
-            <div class="formContainer">
-                <h3>Registrar Habitación</h3>
-                <p>
-                    <label>Número de habitación</label>
-                    <input type="text" id="habitacionNumero" placeholder="Ej: 101">
-                </p>
-                <p>
-                    <label>Tipo</label>
-                    <select id="habitacionTipo">
-                        <option value="Sencilla">Sencilla</option>
-                        <option value="Doble">Doble</option>
-                        <option value="Suite">Suite</option>
-                    </select>
-                </p>
-                <p>
-                    <label>Precio por noche ($)</label>
-                    <input type="number" id="habitacionPrecio" min="1" placeholder="Ej: 50">
-                </p>
-                <button id="btnGuardarHabitacion" class="btn">Guardar Habitación</button>
+    <!-- ══ CONTENIDO PRINCIPAL ═════════════════════════════════ -->
+    <main class="mainContenido">
+
+        <!-- Estadísticas rápidas -->
+        <section class="statsGrid">
+            <div class="statCard">
+                <i data-lucide="bed-double" class="statCardIcono"></i>
+                <span class="statCardValor" id="statTotalHabitaciones">0</span>
+                <span class="statCardEtiqueta">Habitaciones</span>
+            </div>
+            <div class="statCard">
+                <i data-lucide="circle-check" class="statCardIcono"></i>
+                <span class="statCardValor" id="statDisponibles">0</span>
+                <span class="statCardEtiqueta">Disponibles</span>
+            </div>
+            <div class="statCard">
+                <i data-lucide="users" class="statCardIcono"></i>
+                <span class="statCardValor" id="statClientes">0</span>
+                <span class="statCardEtiqueta">Clientes</span>
+            </div>
+            <div class="statCard">
+                <i data-lucide="calendar-check" class="statCardIcono"></i>
+                <span class="statCardValor" id="statReservasActivas">0</span>
+                <span class="statCardEtiqueta">Reservas activas</span>
             </div>
         </section>
 
-        <!-- SECCIÓN 2: CLIENTES -->
-        <section id="secClientes" class="section" hidden>
-            <div class="formContainer">
-                <h3>Registrar Cliente</h3>
-                <p>
-                    <label>Nombre Completo</label>
-                    <input type="text" id="clienteNombre" placeholder="Juan Pérez">
-                </p>
-                <p>
-                    <label>Identificación (DNI/Pasaporte)</label>
-                    <input type="text" id="clienteId" placeholder="12345678X">
-                </p>
-                <p>
-                    <label>Contacto (Email/Teléfono)</label>
-                    <input type="text" id="clienteContacto" placeholder="juan@email.com">
-                </p>
-                <button id="btnGuardarCliente" class="btn">Guardar Cliente</button>
+        <!-- Navegación por pestañas -->
+        <nav class="tabsNav" role="tablist">
+            <button class="tabBtn tabBtnActivo" id="tabBtnHabitaciones" data-tabId="tabHabitaciones">
+                <i data-lucide="bed-double"></i> Habitaciones
+            </button>
+            <button class="tabBtn" id="tabBtnClientes" data-tabId="tabClientes">
+                <i data-lucide="users"></i> Clientes
+            </button>
+            <button class="tabBtn" id="tabBtnReservas" data-tabId="tabReservas">
+                <i data-lucide="clipboard-list"></i> Reservas
+            </button>
+        </nav>
+
+        <!-- ══ PESTAÑA: HABITACIONES ══════════════════════════ -->
+        <section id="tabHabitaciones" class="tabContent tabContentActivo">
+
+            <div class="card">
+                <h2 class="cardTitulo">
+                    <i data-lucide="bed-double"></i> Registrar habitación
+                </h2>
+                <div class="camposGrid">
+                    <div class="campoGrupo">
+                        <label for="inputNumeroHabitacion">Número</label>
+                        <input type="text" id="inputNumeroHabitacion" placeholder="Ej: 301">
+                    </div>
+                    <div class="campoGrupo">
+                        <label for="inputTipoHabitacion">Tipo</label>
+                        <select id="inputTipoHabitacion">
+                            <option value="">-- Selecciona --</option>
+                            <option value="Simple">Simple</option>
+                            <option value="Doble">Doble</option>
+                            <option value="Suite">Suite</option>
+                            <option value="Presidencial">Presidencial</option>
+                        </select>
+                    </div>
+                    <div class="campoGrupo">
+                        <label for="inputPrecioHabitacion">Precio por noche ($)</label>
+                        <input type="number" id="inputPrecioHabitacion" placeholder="Ej: 200" min="1">
+                    </div>
+                </div>
+                <button class="btnPrimario" id="btnRegistrarHabitacion">
+                    <i data-lucide="plus"></i> Registrar habitación
+                </button>
             </div>
+
+            <div class="card">
+                <h2 class="cardTitulo">
+                    <i data-lucide="table-2"></i> Listado de habitaciones
+                </h2>
+                <div class="tablaWrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>N.º</th>
+                                <th>Tipo</th>
+                                <th>Precio/noche</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaHabitacionesBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
         </section>
 
-        <!-- SECCIÓN 3: RESERVAS -->
-        <section id="secReservas" class="section" hidden>
-            <div class="formContainer">
-                <h3>Crear Reserva</h3>
-                <p>
-                    <label>Identificación del Cliente</label>
-                    <input type="text" id="reservaClienteId" placeholder="12345678X">
-                </p>
-                <p>
-                    <label>Número de Habitación</label>
-                    <input type="text" id="reservaHabNumero" placeholder="Ej: 101">
-                </p>
-                <p>
-                    <label>Fecha de Llegada</label>
-                    <input type="date" id="reservaInicio">
-                </p>
-                <p>
-                    <label>Fecha de Salida</label>
-                    <input type="date" id="reservaFin">
-                </p>
-                <button id="btnConfirmarReserva" class="btn">Confirmar Reserva</button>
+        <!-- ══ PESTAÑA: CLIENTES ══════════════════════════════ -->
+        <section id="tabClientes" class="tabContent">
+
+            <div class="card">
+                <h2 class="cardTitulo">
+                    <i data-lucide="user-plus"></i> Registrar cliente
+                </h2>
+                <div class="camposGrid">
+                    <div class="campoGrupo">
+                        <label for="inputNombreCliente">Nombre completo</label>
+                        <input type="text" id="inputNombreCliente" placeholder="Ej: Juan Pérez">
+                    </div>
+                    <div class="campoGrupo">
+                        <label for="inputIdCliente">Identificación</label>
+                        <input type="text" id="inputIdCliente" placeholder="Ej: DNI-0001">
+                    </div>
+                    <div class="campoGrupo">
+                        <label for="inputContactoCliente">Contacto (email)</label>
+                        <input type="email" id="inputContactoCliente" placeholder="Ej: juan@email.com">
+                    </div>
+                </div>
+                <button class="btnPrimario" id="btnRegistrarCliente">
+                    <i data-lucide="plus"></i> Registrar cliente
+                </button>
             </div>
+
+            <div class="card">
+                <h2 class="cardTitulo">
+                    <i data-lucide="table-2"></i> Listado de clientes
+                </h2>
+                <div class="tablaWrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Identificación</th>
+                                <th>Contacto</th>
+                                <th>Reservas activas</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaClientesBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
         </section>
 
-        <!-- SECCIÓN 4: DASHBOARD -->
-        <section id="secDashboard" class="section" hidden>
-            <h3>Dashboard Global</h3>
-            
-            <h4>Habitaciones</h4>
-            <div id="listaHabitaciones" class="gridContainer">
-                <p class="textMuted">No hay habitaciones registradas.</p>
+        <!-- ══ PESTAÑA: RESERVAS ══════════════════════════════ -->
+        <section id="tabReservas" class="tabContent">
+
+            <div class="card">
+                <h2 class="cardTitulo">
+                    <i data-lucide="calendar-plus"></i> Nueva reserva
+                </h2>
+                <div class="camposGrid">
+                    <div class="campoGrupo">
+                        <label for="selectClienteReserva">Cliente</label>
+                        <select id="selectClienteReserva">
+                            <option value="">-- Selecciona un cliente --</option>
+                        </select>
+                    </div>
+                    <div class="campoGrupo">
+                        <label for="selectHabitacionReserva">Habitación disponible</label>
+                        <select id="selectHabitacionReserva">
+                            <option value="">-- Selecciona una habitación --</option>
+                        </select>
+                    </div>
+                    <div class="campoGrupo">
+                        <label for="inputFechaInicio">Fecha de entrada</label>
+                        <input type="date" id="inputFechaInicio">
+                    </div>
+                    <div class="campoGrupo">
+                        <label for="inputFechaFin">Fecha de salida</label>
+                        <input type="date" id="inputFechaFin">
+                    </div>
+                </div>
+                <button class="btnPrimario" id="btnCrearReserva">
+                    <i data-lucide="calendar-check"></i> Crear reserva
+                </button>
             </div>
 
-            <h4>Clientes</h4>
-            <div id="listaClientes" class="gridContainer">
-                <p class="textMuted">No hay clientes registrados.</p>
+            <div class="card">
+                <h2 class="cardTitulo">
+                    <i data-lucide="table-2"></i> Historial de reservas
+                </h2>
+                <div class="tablaWrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Cliente</th>
+                                <th>Habitación</th>
+                                <th>Entrada</th>
+                                <th>Salida</th>
+                                <th>Estado / Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaReservasBody"></tbody>
+                    </table>
+                </div>
             </div>
 
-            <h4>Reservas Activas</h4>
-            <div id="listaReservas" class="gridContainer">
-                <p class="textMuted">No hay reservas registradas.</p>
-            </div>
         </section>
+
     </main>
 
-    <script type="module" src="../js/home.js"></script>
+    <!-- ══ NOTIFICACIONES ══════════════════════════════════════ -->
+    <div id="notificaciones" aria-live="polite"></div>
+
+    <!-- ══ SCRIPTS ════════════════════════════════════════════ -->
+    <script src="../js/Habitacion.js"></script>
+    <script src="../js/Cliente.js"></script>
+    <script src="../js/Reserva.js"></script>
+    <script src="../js/hotel.js"></script>
+    <script src="../main.js"></script>
+
 </body>
 </html>

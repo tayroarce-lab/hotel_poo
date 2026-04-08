@@ -4,6 +4,8 @@ class Cliente {
         this.identificacion = identificacion;
         this.contacto = contacto;
     }
-}
 
-export default Cliente;
+    mostrarInfo() {
+        console.log(`Cliente ${this.nombre} - ${this.identificacion} - ${this.contacto}`);
+    }
+}

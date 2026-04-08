@@ -4,16 +4,15 @@ class Reserva {
         this.habitacion = habitacion;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
-        this.estado = "confirmada";
-    }
-
-    confirmar() {
-        this.estado = "confirmada";
+        this.estado = "activa";
     }
 
     cancelar() {
         this.estado = "cancelada";
+        this.habitacion.liberar();
+    }
+
+    mostrarInfo() {
+        console.log(`Reserva ${this.cliente.nombre} - ${this.habitacion.numero}`);
     }
 }
-
-export default Reserva;

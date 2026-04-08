@@ -1,6 +1,3 @@
-// Habitación: número, tipo, precio, estado.
-
-
 class Habitacion {
     constructor(numero, tipo, precio) {
         this.numero = numero;
@@ -9,13 +6,15 @@ class Habitacion {
         this.estado = "disponible";
     }
 
-    ocupar() {
-        this.estado = "ocupada";
+    reservar() {
+        this.estado = "ocupado";
     }
 
     liberar() {
         this.estado = "disponible";
     }
-}
 
-export default Habitacion;
+    mostrarInfo() {
+        console.log(`Habitación ${this.numero} - ${this.tipo} - ${this.precio} - ${this.estado}`);
+    }
+}

@@ -1,0 +1,469 @@
+/* ============================================================
+   style.css — Sistema de Reservas de Hotel
+   Tema: Blanco con tonalidades naranja
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ── Variables ─────────────────────────────────────────────── */
+:root {
+    --blanco:         #ffffff;
+    --fondo:          #fdf8f4;
+    --fondoSuave:     #fff4ec;
+    --fondoCard:      #ffffff;
+    --naranja:        #f97316;
+    --naranjaOscuro:  #ea580c;
+    --naranjaClaro:   #fed7aa;
+    --naranjaFondo:   #fff7ed;
+    --naranjaBtn:     #fb923c;
+    --textoPrincipal: #1c1917;
+    --textoSecunadario:#57534e;
+    --textoSuave:     #a8a29e;
+    --borde:          #e7e5e4;
+    --bordeNaranja:   rgba(249,115,22,0.25);
+    --sombra:         0 2px 12px rgba(249,115,22,0.08);
+    --sombraCard:     0 1px 4px rgba(0,0,0,0.06), 0 4px 16px rgba(249,115,22,0.06);
+    --radio:          14px;
+    --radioSm:        8px;
+    --transicion:     0.22s ease;
+}
+
+/* ── Reset & Base ───────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── Lucide Icons ───────────────────────────────────────────── */
+/* Tamaño por defecto para todos los SVG generados por Lucide  */
+svg[data-lucide] {
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+    flex-shrink: 0;
+}
+
+/* Icono del header (logo) */
+.headerLogo svg[data-lucide] {
+    width: 2rem;
+    height: 2rem;
+    color: var(--naranja);
+}
+
+/* Iconos de las stat cards */
+.statCardIcono svg[data-lucide] {
+    width: 1.75rem;
+    height: 1.75rem;
+    color: var(--naranja);
+}
+
+/* Icono dentro de badge */
+.badge svg[data-lucide] {
+    width: 0.85em;
+    height: 0.85em;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: var(--fondo);
+    color: var(--textoPrincipal);
+    min-height: 100vh;
+}
+
+/* ── Header ────────────────────────────────────────────────── */
+.header {
+    background: var(--blanco);
+    border-bottom: 2px solid var(--naranjaClaro);
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(249,115,22,0.08);
+}
+
+.headerLogo {
+    font-size: 1.75rem;
+}
+
+.headerTitulo {
+    font-size: 1.2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--naranja), var(--naranjaOscuro));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.headerSubtitulo {
+    font-size: 0.78rem;
+    color: var(--textoSuave);
+    margin-left: auto;
+    background: var(--naranjaFondo);
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    border: 1px solid var(--naranjaClaro);
+    color: var(--naranjaOscuro);
+    font-weight: 500;
+}
+
+/* ── Layout principal ───────────────────────────────────────── */
+.mainContenido {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+}
+
+/* ── Stats ──────────────────────────────────────────────────── */
+.statsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.statCard {
+    background: var(--blanco);
+    border: 1px solid var(--borde);
+    border-top: 3px solid var(--naranja);
+    border-radius: var(--radio);
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    box-shadow: var(--sombraCard);
+    transition: transform var(--transicion), box-shadow var(--transicion);
+}
+
+.statCard:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(249,115,22,0.12);
+}
+
+.statCardIcono { font-size: 1.5rem; margin-bottom: 0.25rem; }
+
+.statCardValor {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--naranja);
+    line-height: 1;
+}
+
+.statCardEtiqueta {
+    font-size: 0.75rem;
+    color: var(--textoSuave);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+}
+
+/* ── Tabs ───────────────────────────────────────────────────── */
+.tabsNav {
+    display: flex;
+    gap: 0.375rem;
+    margin-bottom: 1.5rem;
+    background: var(--blanco);
+    padding: 0.375rem;
+    border-radius: var(--radio);
+    border: 1px solid var(--borde);
+    box-shadow: var(--sombra);
+}
+
+.tabBtn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--textoSecunadario);
+    padding: 0.6rem 1rem;
+    border-radius: var(--radioSm);
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all var(--transicion);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+}
+
+.tabBtn:hover {
+    background: var(--naranjaFondo);
+    color: var(--naranja);
+}
+
+.tabBtnActivo {
+    background: var(--naranja);
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(249,115,22,0.35);
+}
+
+.tabBtnActivo:hover {
+    background: var(--naranjaOscuro);
+    color: white;
+}
+
+/* ── Tab content ────────────────────────────────────────────── */
+.tabContent { display: none; }
+
+.tabContentActivo {
+    display: block;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Cards ──────────────────────────────────────────────────── */
+.card {
+    background: var(--blanco);
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+    box-shadow: var(--sombraCard);
+}
+
+.cardTitulo {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--textoPrincipal);
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-bottom: 0.875rem;
+    border-bottom: 1px solid var(--borde);
+}
+
+/* ── Campos ─────────────────────────────────────────────────── */
+.camposGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.campoGrupo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+}
+
+.campoGrupo label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--textoSecunadario);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.campoGrupo input,
+.campoGrupo select {
+    background: var(--fondo);
+    border: 1px solid var(--borde);
+    border-radius: var(--radioSm);
+    padding: 0.6rem 0.875rem;
+    color: var(--textoPrincipal);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color var(--transicion), box-shadow var(--transicion), background var(--transicion);
+}
+
+.campoGrupo input:hover,
+.campoGrupo select:hover {
+    border-color: var(--naranjaBtn);
+    background: var(--blanco);
+}
+
+.campoGrupo input:focus,
+.campoGrupo select:focus {
+    border-color: var(--naranja);
+    background: var(--blanco);
+    box-shadow: 0 0 0 3px rgba(249,115,22,0.15);
+}
+
+.campoGrupo select option { background: var(--blanco); }
+
+/* ── Botones ────────────────────────────────────────────────── */
+.btnPrimario {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.5rem;
+    border: none;
+    border-radius: var(--radioSm);
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    background: var(--naranja);
+    color: white;
+    box-shadow: 0 2px 8px rgba(249,115,22,0.3);
+    transition: all var(--transicion);
+}
+
+.btnPrimario:hover {
+    background: var(--naranjaOscuro);
+    box-shadow: 0 4px 16px rgba(249,115,22,0.4);
+    transform: translateY(-1px);
+}
+
+.btnPrimario:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 4px rgba(249,115,22,0.3);
+}
+
+.btnCancelar {
+    background: #fff1f0;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+    padding: 0.3rem 0.75rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: all var(--transicion);
+}
+
+.btnCancelar:hover {
+    background: #fee2e2;
+    border-color: #dc2626;
+}
+
+/* ── Tablas ─────────────────────────────────────────────────── */
+.tablaWrapper {
+    overflow-x: auto;
+    border-radius: var(--radioSm);
+    border: 1px solid var(--borde);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+thead tr {
+    background: var(--naranjaFondo);
+    border-bottom: 2px solid var(--naranjaClaro);
+}
+
+thead th {
+    padding: 0.875rem 1rem;
+    text-align: left;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--naranjaOscuro);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+tbody tr {
+    border-bottom: 1px solid var(--borde);
+    transition: background var(--transicion);
+}
+
+tbody tr:last-child { border-bottom: none; }
+
+tbody tr:hover {
+    background: var(--fondoSuave);
+}
+
+tbody td {
+    padding: 0.875rem 1rem;
+    color: var(--textoPrincipal);
+}
+
+.filaCancelada { opacity: 0.5; }
+
+.celdaAcciones {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.emptyState {
+    text-align: center;
+    color: var(--textoSuave);
+    padding: 2.5rem 1rem !important;
+    font-style: italic;
+    font-size: 0.875rem;
+}
+
+/* ── Badges ─────────────────────────────────────────────────── */
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    letter-spacing: 0.02em;
+}
+
+.badgeDisponible {
+    background: #dcfce7;
+    color: #16a34a;
+    border: 1px solid #bbf7d0;
+}
+
+.badgeOcupada {
+    background: var(--naranjaFondo);
+    color: var(--naranjaOscuro);
+    border: 1px solid var(--naranjaClaro);
+}
+
+.badgeCancelada {
+    background: #f5f5f4;
+    color: var(--textoSuave);
+    border: 1px solid var(--borde);
+}
+
+.badgeActiva {
+    background: #dcfce7;
+    color: #16a34a;
+    border: 1px solid #bbf7d0;
+}
+
+/* ── Notificaciones (toasts) ────────────────────────────────── */
+#notificaciones {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    z-index: 999;
+}
+
+.toast {
+    background: var(--blanco);
+    border: 1px solid var(--borde);
+    border-radius: var(--radioSm);
+    padding: 0.875rem 1.25rem;
+    font-size: 0.875rem;
+    max-width: 340px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    opacity: 0;
+    transform: translateX(20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    color: var(--textoPrincipal);
+}
+
+.toastVisible { opacity: 1; transform: translateX(0); }
+.toastExito   { border-left: 4px solid #16a34a; }
+.toastError   { border-left: 4px solid #dc2626; }
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 640px) {
+    .header          { padding: 0.875rem 1rem; }
+    .mainContenido   { padding: 1rem; }
+    .tabsNav         { flex-wrap: wrap; }
+    .tabBtn          { font-size: 0.8rem; }
+    .headerSubtitulo { display: none; }
+}
